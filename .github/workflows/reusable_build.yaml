@@ -29,7 +29,11 @@ on:
         type: string
         default: ""
       ros-distribution:
-        description: 'Optional single ROS distribution to build ("humble", "jazzy", "kilted", "lyrical", or "rolling"); overrides dist-matrix when non-empty'
+        description: >
+          Optional single ROS distribution to build ("humble", "jazzy", "kilted",
+          "lyrical", or "rolling"); overrides dist-matrix when non-empty.
+          Set to "auto" to auto-detect from the target branch (github.base_ref || github.ref_name)
+          when it matches a ROS distribution, falling back to dist-matrix otherwise.
         required: false
         type: string
         default: ""
@@ -44,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJson(inputs.ros-distribution != '' && format('[{{"ros_distribution":"{0}"}}]', inputs.ros-distribution) || inputs.dist-matrix) }}
+        include: ${{ fromJson((inputs.ros-distribution != '' && inputs.ros-distribution != 'auto') && format('[{{"ros_distribution":"{0}"}}]', inputs.ros-distribution) || (inputs.ros-distribution == 'auto' && contains(fromJson('["humble","jazzy","kilted","lyrical","rolling"]'), github.base_ref || github.ref_name) && format('[{{"ros_distribution":"{0}"}}]', github.base_ref || github.ref_name) || inputs.dist-matrix)) }}
     name: Build and test
     # After ubuntu-latest migrated to ubuntu-26.04, test errors started appearing
     # for tsan because vm.mmap_rnd_bits settings changed between 24.04 and 26.04.

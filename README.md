@@ -14,7 +14,7 @@ Templates for workflows and CI
 | `packages` | yes | — | Newline-separated package names to build and test. |
 | `mixin` | no | `build` | Build mode: `build` (`ccache`, `coverage-gcc`, `lld`), `asan` (`asan-gcc`, `lld`), or `tsan` (`tsan`, `lld`). |
 | `dist-matrix` | no | `humble`, `jazzy`, `lyrical`, `rolling` | JSON array of `{ros_distribution}` entries (`ubuntu_distribution` optional). |
-| `ros-distribution` | no | `""` | Optional single ROS distro (`humble`, `jazzy`, `kilted`, `lyrical`, `rolling`); overrides `dist-matrix` when non-empty. |
+| `ros-distribution` | no | `""` | Optional single ROS distro (`humble`, `jazzy`, `kilted`, `lyrical`, `rolling`), or `auto` to detect from `github.base_ref \|\| github.ref_name` (falls back to `dist-matrix`). |
 | `repos-branch-override` | no | `""` | Branch of `open-rmf/rmf` for `rmf.repos`; `""` or `"auto"` uses `matrix.ros_distribution`. |
 
 When `ubuntu_distribution` is omitted, `ros_distribution` auto-maps to:
